@@ -63,6 +63,8 @@ reactNativeTvosController.enablePanGesture();
 You will receive the specific moving offset tracing data if you enable the pan gesture.
 You can't receive the swipe event anymore.
 
+You can receive the swipe event and other gestures when it was enabled simultaneously recognizing `reactNativeTvosController.enableRecognizeSimultaneously()`
+
 ### disablePanGesture
 
 ```javascript
@@ -70,6 +72,18 @@ reactNativeTvosController.disablePanGesture();
 ```
 You won't receive the specific moving offset tracing data if you disable the pan gesture.
 You can continue receiving the swipe event.
+
+### enableRecognizeSimultaneously
+
+```javascript
+reactNativeTvosController.enableRecognizeSimultaneously();
+```
+Events from all recognizers are sending simultaneously.
+
+```javascript
+reactNativeTvosController.enableRecognizeSimultaneously(false);
+```
+Disable. Events will be send from the first recognized gesture recognizer.
 
 ### subscribe
 
@@ -89,7 +103,7 @@ var tapSubscription = reactNativeTvosController.subscribe('TAP',
       e.code : 0 || 1 || 2 || 3 || 4 || 5 || 6
       */
     });
-    tapSubscription(); //Cancel Subscription 
+    tapSubscription(); //Cancel Subscription
 ```
 
 ##### SWIPE
@@ -101,10 +115,10 @@ var swipeSubscription = reactNativeTvosController.subscribe('SWIPE',
       console.log(JSON.stringify(e));
       /*
       e.direction : "Right" || "Down" || "Left" || "Up"
-      e.code : 0 || 1 || 2 || 3 
+      e.code : 0 || 1 || 2 || 3
       */
     });
-    swipeSubscription(); //Cancel Subscription 
+    swipeSubscription(); //Cancel Subscription
 ```
 
 ##### LONGPRESS
