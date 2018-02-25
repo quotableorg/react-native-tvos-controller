@@ -15,6 +15,9 @@ module.exports = {
     disablePanGesture: function(){
         NativeModules.ReactNativeTvosController.disablePanGesture();
     },
+    enableRecognizeSimultaneously: function(recognizeSimultaneously = true){
+        NativeModules.ReactNativeTvosController.enableRecognizeSimultaneously(recognizeSimultaneously);
+    },
     subscribe: function(event, callback){
         nativeEventEmitter.addListener(event, callback);
         return function(){

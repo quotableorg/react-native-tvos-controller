@@ -9,8 +9,9 @@
 #import <UIKit/UIKit.h>
 #import "ReactNativeTvosController.h"
 
-
 @interface ReactNativeTvosController()
+
+@property(nonatomic) BOOL recognizeSimultaneously;
 
 - (NSString *)recognizerStateToString:(UIGestureRecognizerState)state;
 
@@ -23,7 +24,10 @@ UIPanGestureRecognizer *panGestureRecognizer;
 RCT_EXPORT_MODULE()
 
 RCT_EXPORT_METHOD(connect) {
+    self.recognizeSimultaneously = FALSE; // default
+    
     UIView *rootView = [self getRootViewController].view;
+    
     [self addTapGestureRecognizerWithType:rootView pressType:UIPressTypePlayPause selector:@selector(respondToPlayPauseButton)];
     [self addTapGestureRecognizerWithType:rootView pressType:UIPressTypeMenu selector:@selector(respondToMenuButton)];
     [self addTapGestureRecognizerWithType:rootView pressType:UIPressTypeSelect selector:@selector(respondToSelectButton)];
@@ -44,6 +48,7 @@ RCT_EXPORT_METHOD(enablePanGesture) {
     UIView *rootView = [self getRootViewController].view;
     panGestureRecognizer = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(respondToPanGesture:)];
     [rootView addGestureRecognizer:panGestureRecognizer];
+    panGestureRecognizer.delegate = self;
 }
 
 RCT_EXPORT_METHOD(disablePanGesture) {
@@ -53,12 +58,15 @@ RCT_EXPORT_METHOD(disablePanGesture) {
     }
 }
 
+RCT_EXPORT_METHOD(enableRecognizeSimultaneously:(BOOL) simultaneously) {
+    self.recognizeSimultaneously = simultaneously;
+}
+
 - (NSArray<NSString *> *)supportedEvents {
     return @[@"TAP", @"SWIPE", @"LONGPRESS", @"PAN"];
 }
 
-- (UIViewController *)getRootViewController
-{
+- (UIViewController *)getRootViewController {
     UIViewController *rootVC=[[UIApplication sharedApplication].delegate window].rootViewController;
     return rootVC;
 }
@@ -67,17 +75,20 @@ RCT_EXPORT_METHOD(disablePanGesture) {
     UITapGestureRecognizer *tapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:selector];
     tapGestureRecognizer.allowedPressTypes = @[[NSNumber numberWithInteger:pressType]];
     [view addGestureRecognizer:tapGestureRecognizer];
+    tapGestureRecognizer.delegate = self;
 }
 
 - (void)addSwipeGestureRecognizerWithDirection:(UIView *)view direction:(UISwipeGestureRecognizerDirection)direction {
     UISwipeGestureRecognizer *swipeGestureRecognizer = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(respondToSwipeGesture:)];
     swipeGestureRecognizer.direction = direction;
     [view addGestureRecognizer:swipeGestureRecognizer];
+    swipeGestureRecognizer.delegate = self;
 }
 
 - (void)addLongPressGestureRecognizer:(UIView *)view {
     UILongPressGestureRecognizer *longPressGestureRecognizer = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(respondToLongPressGesture:)];
     [view addGestureRecognizer:longPressGestureRecognizer];
+    longPressGestureRecognizer.delegate = self;
 }
 
 - (void)respondToPlayPauseButton {
@@ -194,6 +205,10 @@ RCT_EXPORT_METHOD(disablePanGesture) {
     default:
       return nil;
   }
+}
+
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer {
+    return self.recognizeSimultaneously;
 }
 
 @end
