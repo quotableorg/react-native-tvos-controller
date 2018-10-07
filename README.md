@@ -36,11 +36,11 @@ rnpm link react-native-tvos-controller
 If *Automatically link* can't work, you should link the module manually.
 [Manually Link Tutorial](https://facebook.github.io/react-native/docs/linking-libraries-ios.html#manual-linking)
 
-1. Add the following to your Project: node_modules/react-native-tvos-controller/ReactNativeTvosController/ReactNativeTvosController.xcodeproj
+1. Add the following to your Project: node_modules/react-native-tvos-controller/ios/RNtvoscontroller.xcodeproj
 
-2. Add the following to Link Binary With Libraries: libReactNativeTvosController.a
+2. Add the following to Link Binary With Libraries: libRNtvoscontroller.a
 
-3. Add the following to your Header Search Paths: $(SRCROOT)/../node_modules/react-native-tvos-controller/ReactNativeTvosController/ReactNativeTvosController
+3. Add the following to your Header Search Paths: $(SRCROOT)/../node_modules/react-native-tvos-controller/ios/RNtvoscontroller
 
 ## Usage
 
@@ -81,7 +81,7 @@ reactNativeTvosController.enableRecognizeSimultaneously();
 Events from all recognizers are sending simultaneously.
 
 ```javascript
-reactNativeTvosController.enableRecognizeSimultaneously(false);
+reactNativeTvosController.disableRecognizeSimultaneously();
 ```
 Disable. Events will be send from the first recognized gesture recognizer.
 
