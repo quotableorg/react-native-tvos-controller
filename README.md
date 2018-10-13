@@ -80,6 +80,8 @@ reactNativeTvosController.enableRecognizeSimultaneously();
 ```
 Events from all recognizers are sending simultaneously.
 
+### disableRecognizeSimultaneously
+
 ```javascript
 reactNativeTvosController.disableRecognizeSimultaneously();
 ```
