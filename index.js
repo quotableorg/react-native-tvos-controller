@@ -9,6 +9,27 @@ import {
       connect: function(){
           NativeModules.ReactNativeTvosController.connect();
       },
+      connectTap: function(){
+          NativeModules.ReactNativeTvosController.connectTap();
+      },
+      connectSwipe: function(){
+          NativeModules.ReactNativeTvosController.connectSwipe();
+      },
+      connectLongPress: function(){
+          NativeModules.ReactNativeTvosController.connectLongPress();
+      },
+      disconnect: function(){
+          NativeModules.ReactNativeTvosController.disconnect();
+      },
+      disconnectTap: function(){
+          NativeModules.ReactNativeTvosController.disconnectTap();
+      },
+      disconnectSwipe: function(){
+          NativeModules.ReactNativeTvosController.disconnectSwipe();
+      },
+      disconnectLongPress: function(){
+          NativeModules.ReactNativeTvosController.disconnectLongPress();
+      },
       enablePanGesture: function(){
           NativeModules.ReactNativeTvosController.enablePanGesture();
       },

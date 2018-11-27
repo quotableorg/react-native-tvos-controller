@@ -12,9 +12,19 @@
 
 UIPanGestureRecognizer *panGestureRecognizer;
 
+NSMutableArray *tapRecognizers;
+NSMutableArray *swipeRecognizers;
+NSMutableArray *longPressRecognizers;
+
 RCT_EXPORT_MODULE()
 
 RCT_EXPORT_METHOD(connect) {
+    [self connectTap];
+    [self connectSwipe];
+    [self connectLongPress];
+}
+
+RCT_EXPORT_METHOD(connectTap) {
     self.recognizeSimultaneously = NO;
     UIView *rootView = [self getRootViewController].view;
     
@@ -25,13 +35,65 @@ RCT_EXPORT_METHOD(connect) {
     [self addTapGestureRecognizerWithType:rootView pressType:UIPressTypeDownArrow selector:@selector(respondToDownArrowButton)];
     [self addTapGestureRecognizerWithType:rootView pressType:UIPressTypeLeftArrow selector:@selector(respondToLeftArrowButton)];
     [self addTapGestureRecognizerWithType:rootView pressType:UIPressTypeRightArrow selector:@selector(respondToRightArrowButton)];
+}
+
+RCT_EXPORT_METHOD(connectSwipe) {
+    self.recognizeSimultaneously = NO;
+    UIView *rootView = [self getRootViewController].view;
     
     [self addSwipeGestureRecognizerWithDirection:rootView direction:UISwipeGestureRecognizerDirectionRight];
     [self addSwipeGestureRecognizerWithDirection:rootView direction:UISwipeGestureRecognizerDirectionLeft];
     [self addSwipeGestureRecognizerWithDirection:rootView direction:UISwipeGestureRecognizerDirectionUp];
     [self addSwipeGestureRecognizerWithDirection:rootView direction:UISwipeGestureRecognizerDirectionDown];
+}
+
+RCT_EXPORT_METHOD(connectLongPress) {
+    self.recognizeSimultaneously = NO;
+    UIView *rootView = [self getRootViewController].view;
     
     [self addLongPressGestureRecognizer:rootView];
+}
+
+RCT_EXPORT_METHOD(disconnect) {
+    [self disconnectTap];
+    [self disconnectSwipe];
+    [self disconnectLongPress];
+}
+
+RCT_EXPORT_METHOD(disconnectTap) {
+    if (!tapRecognizers) return;
+
+    UIView *view = [self getRootViewController].view;
+    
+    for (UIGestureRecognizer *recognizer in tapRecognizers)
+    {
+        recognizer.enabled = NO;
+        [view removeGestureRecognizer:recognizer];
+    }
+}
+
+RCT_EXPORT_METHOD(disconnectSwipe) {
+    if (!swipeRecognizers) return;
+
+    UIView *view = [self getRootViewController].view;
+    
+    for (UIGestureRecognizer *recognizer in swipeRecognizers)
+    {
+        recognizer.enabled = NO;
+        [view removeGestureRecognizer:recognizer];
+    }
+}
+
+RCT_EXPORT_METHOD(disconnectLongPress) {
+    if (!longPressRecognizers) return;
+
+    UIView *view = [self getRootViewController].view;
+    
+    for (UIGestureRecognizer *recognizer in longPressRecognizers)
+    {
+        recognizer.enabled = NO;
+        [view removeGestureRecognizer:recognizer];
+    }
 }
 
 RCT_EXPORT_METHOD(enablePanGesture) {
@@ -65,24 +127,27 @@ RCT_EXPORT_METHOD(disableRecognizeSimultaneously) {
     return rootVC;
 }
 
-- (void)addTapGestureRecognizerWithType:(UIView *)view pressType:(UIPressType)pressType selector:(SEL)selector {
+- (UITapGestureRecognizer *)addTapGestureRecognizerWithType:(UIView *)view pressType:(UIPressType)pressType selector:(SEL)selector {
     UITapGestureRecognizer *tapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:selector];
     tapGestureRecognizer.allowedPressTypes = @[[NSNumber numberWithInteger:pressType]];
     [view addGestureRecognizer:tapGestureRecognizer];
     tapGestureRecognizer.delegate = self;
+    return tapGestureRecognizer;
 }
 
-- (void)addSwipeGestureRecognizerWithDirection:(UIView *)view direction:(UISwipeGestureRecognizerDirection)direction {
+- (UISwipeGestureRecognizer *)addSwipeGestureRecognizerWithDirection:(UIView *)view direction:(UISwipeGestureRecognizerDirection)direction {
     UISwipeGestureRecognizer *swipeGestureRecognizer = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(respondToSwipeGesture:)];
     swipeGestureRecognizer.direction = direction;
     [view addGestureRecognizer:swipeGestureRecognizer];
     swipeGestureRecognizer.delegate = self;
+    return swipeGestureRecognizer;
 }
 
-- (void)addLongPressGestureRecognizer:(UIView *)view {
+- (UILongPressGestureRecognizer * )addLongPressGestureRecognizer:(UIView *)view {
     UILongPressGestureRecognizer *longPressGestureRecognizer = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(respondToLongPressGesture:)];
     [view addGestureRecognizer:longPressGestureRecognizer];
     longPressGestureRecognizer.delegate = self;
+    return longPressGestureRecognizer;
 }
 
 - (void)respondToPlayPauseButton {

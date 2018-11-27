@@ -1,4 +1,12 @@
 export const connect: () => void;
+export const connectTap: () => void;
+export const connectSwipe: () => void;
+export const connectLongPress: () => void;
+
+export const disconnect: () => void;
+export const disconnectTap: () => void;
+export const disconnectSwipe: () => void;
+export const disconnectLongPress: () => void;
 
 export const enablePanGesture: () => void;
 export const disablePanGesture: () => void;
