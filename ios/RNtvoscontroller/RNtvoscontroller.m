@@ -19,9 +19,11 @@ NSMutableArray *longPressRecognizers;
 RCT_EXPORT_MODULE()
 
 RCT_EXPORT_METHOD(connect) {
-    [self connectTap];
-    [self connectSwipe];
-    [self connectLongPress];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self connectTap];
+        [self connectSwipe];
+        [self connectLongPress];
+    });
 }
 
 RCT_EXPORT_METHOD(connectTap) {
