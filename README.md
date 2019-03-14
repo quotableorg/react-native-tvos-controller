@@ -1,3 +1,5 @@
+# Deprecated! 
+# Go to [respectTheCode's repo](https://github.com/respectTheCode/react-native-tvos-controller)
 # react-native-tvos-controller
 
 [![npm version](https://badge.fury.io/js/react-native-tvos-controller.svg)](https://badge.fury.io/js/react-native-tvos-controller)
